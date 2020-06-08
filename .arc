@@ -3,9 +3,9 @@ begin-app
 
 @http
 get /
+get /recipes
+post /recipe
 
 @tables
-data
-  scopeID *String
-  dataID **String
-  ttl TTL
+recipes
+  recipe *String

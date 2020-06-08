@@ -1,0 +1,8 @@
+{
+  "name": "post-recipe",
+  "dependencies": {
+    "@architect/functions": "latest",
+    "@begin/data": "latest",
+    "puppeteer": "^3.3.0"
+  }
+}

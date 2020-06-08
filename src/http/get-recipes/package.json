@@ -1,0 +1,7 @@
+{
+  "name": "get-recipes",
+  "dependencies": {
+    "@architect/functions": "latest",
+    "@begin/data": "latest"
+  }
+}
