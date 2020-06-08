@@ -44,8 +44,8 @@ exports.handler = async function http (request) {
     return {"message": "Could not extract recipe."};
   }
   const recipe = JSON.stringify(pullRecipeCard());
-  
-  await data.set({table: "recipes", recipe})
+  if(!recipe.message)
+    await data.set({table: "recipes", recipe})
   return {
     headers: {
       'cache-control': 'no-cache, no-store, must-revalidate, max-age=0, s-maxage=0',
