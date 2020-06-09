@@ -51,6 +51,6 @@ exports.handler = async function http (request) {
       'cache-control': 'no-cache, no-store, must-revalidate, max-age=0, s-maxage=0',
       'content-type': 'application/json; charset=utf8'
     },
-    body: recipe
+    body: JSON.stringify(recipe)
   }
 }
