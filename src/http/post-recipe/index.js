@@ -43,9 +43,9 @@ exports.handler = async function http (request) {
     if($('.wprm-recipe-container').is('.wprm-recipe-container')) return buildRecipeCard('.wprm-recipe-name', '.wprm-recipe-ingredient', '.wprm-recipe-instruction')
     return {"message": "Could not extract recipe."};
   }
-  const recipe = JSON.stringify(pullRecipeCard());
+  const recipe = pullRecipeCard();
   if(!recipe.message)
-    await data.set({table: "recipes", recipe})
+    await data.set({table: "recipes", JSON.stringify(recipe)})
   return {
     headers: {
       'cache-control': 'no-cache, no-store, must-revalidate, max-age=0, s-maxage=0',
