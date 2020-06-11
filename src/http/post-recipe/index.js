@@ -44,8 +44,10 @@ exports.handler = async function http (request) {
     return {"message": "Could not extract recipe."};
   }
   const recipe = pullRecipeCard();
-  if(!recipe.message)
+  if(!recipe.message) {
     await data.set({table: "recipes", recipe: JSON.stringify(recipe)})
+    triggerBuild();
+  }
   return {
     headers: {
       'cache-control': 'no-cache, no-store, must-revalidate, max-age=0, s-maxage=0',
@@ -53,4 +55,16 @@ exports.handler = async function http (request) {
     },
     body: html
   }
+}
+
+function triggerBuild() {
+  const request = https.request({
+    hostname: 'api.netlify.com',
+    port: 443,
+    path: '/build_hooks/5ee263de79c262cd695003ea',
+    method: 'POST'
+  }, response => {
+    console.log('build triggered');
+  });
+  request.end();
 }
