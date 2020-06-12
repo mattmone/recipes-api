@@ -44,7 +44,7 @@ exports.handler = async function http (request) {
     return {"message": "Could not extract recipe."};
   }
   const recipe = pullRecipeCard();
-  if(!recipe.message) {
+  if(!recipe.message && recipe.title) {
     await data.set({table: "recipes", recipe: JSON.stringify(recipe)})
     triggerBuild();
   }
