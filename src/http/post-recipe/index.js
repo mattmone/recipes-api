@@ -4,7 +4,7 @@ const cheerio = require('cheerio');
 
 function getHtml(url) {
   return new Promise((resolve, reject) => {
-    https.get(url, (response) => {
+    https.get(`https://render-tron.appspot.com/render/${encodeURIComponent(url)}`, (response) => {
       let html = '';
       response.on('data', (chunk) => {
         html += chunk
