@@ -23,37 +23,47 @@ exports.handler = async function http (request) {
   const bodyBuffer = Buffer.from(request.body, 'base64');
   const url = bodyBuffer.toString('utf-8');
 
-  const html = await getHtml(url);
-  const $ = cheerio.load(html)
+  try {
+    const html = await getHtml(url);
+    const $ = cheerio.load(html)
 
-  const extractContent = (nodes) => {
-    return Array.from(nodes.map((i, n) => $(n).text().trim())).filter((n) => n)
-  }
-  const buildRecipeCard = (titleSelector, ingredientSelector, directionSelector) => {
-    return {
-      title: $(titleSelector).text(),
-      ingredients: extractContent($(ingredientSelector)),
-      directions: extractContent($(directionSelector))
+    const extractContent = (nodes) => {
+      return Array.from(nodes.map((i, n) => $(n).text().trim())).filter((n) => n)
     }
-  }
-  const pullRecipeCard = () => {
-    if($('.easyrecipe').is('.easyrecipe')) return buildRecipeCard('.ERSName', '.ingredient', '.instruction');
-    if(url.match(/allrecipes.com/)) return buildRecipeCard("#recipe-main-content", ".recipe-ingred_txt", '.recipe-directions__list--item')
-    if(url.match(/pamperedchef.com/)) return buildRecipeCard("#recipeName", "#rpIngredients li", '#rpDirections li')
-    if($('.wprm-recipe-container').is('.wprm-recipe-container')) return buildRecipeCard('.wprm-recipe-name', '.wprm-recipe-ingredient', '.wprm-recipe-instruction')
-    return {"message": "Could not extract recipe."};
-  }
-  const recipe = pullRecipeCard();
-  if(!recipe.message && recipe.title) {
-    await data.set({table: "recipes", recipe: JSON.stringify(recipe)})
-    triggerBuild();
-  }
-  return {
-    headers: {
-      'cache-control': 'no-cache, no-store, must-revalidate, max-age=0, s-maxage=0',
-      'content-type': 'application/json; charset=utf8'
-    },
-    body: JSON.stringify(recipe)
+    const buildRecipeCard = (titleSelector, ingredientSelector, directionSelector) => {
+      return {
+        title: $(titleSelector).text(),
+        ingredients: extractContent($(ingredientSelector)),
+        directions: extractContent($(directionSelector))
+      }
+    }
+    const pullRecipeCard = () => {
+      if($('.easyrecipe').is('.easyrecipe')) return buildRecipeCard('.ERSName', '.ingredient', '.instruction');
+      if(url.match(/allrecipes.com/)) return buildRecipeCard("#recipe-main-content", ".recipe-ingred_txt", '.recipe-directions__list--item')
+      if(url.match(/pamperedchef.com/)) return buildRecipeCard("#recipeName", "#rpIngredients li", '#rpDirections li')
+      if($('.wprm-recipe-container').is('.wprm-recipe-container')) return buildRecipeCard('.wprm-recipe-name', '.wprm-recipe-ingredient', '.wprm-recipe-instruction')
+      return {"message": "Could not extract recipe."};
+    }
+    const recipe = pullRecipeCard();
+    if(!recipe.message && recipe.title) {
+      await data.set({table: "recipes", recipe: JSON.stringify(recipe)})
+      triggerBuild();
+    }
+    return {
+      headers: {
+        'cache-control': 'no-cache, no-store, must-revalidate, max-age=0, s-maxage=0',
+        'content-type': 'application/json; charset=utf8'
+      },
+      body: JSON.stringify(recipe)
+    }
+  } catch (error) {
+    return {
+      headers: {
+        'cache-control': 'no-cache, no-store, must-revalidate, max-age=0, s-maxage=0',
+        'content-type': 'application/json; charset=utf8'
+      },
+      body: JSON.stringify(error)
+    }
   }
 }
 
