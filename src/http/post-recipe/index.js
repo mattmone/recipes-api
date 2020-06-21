@@ -1,23 +1,6 @@
 const data = require('@begin/data');
 const axios = require("axios");
-const https = require("https");
 const cheerio = require('cheerio');
-
-// function getHtml(url) {
-//   return new Promise((resolve, reject) => {
-//     https.get(`https://render-tron.appspot.com/render/${encodeURIComponent(url)}`, (response) => {
-//       let html = '';
-//       response.on('data', (chunk) => {
-//         html += chunk
-//       });
-//       response.on('end', () => {
-//         resolve(html);
-//       })
-//     }).on('error', (error) => {
-//       reject(error);
-//     })
-//   })
-// }
 
 // learn more about HTTP functions here: https://arc.codes/primitives/http
 exports.handler = async function http (request) {
@@ -70,13 +53,5 @@ exports.handler = async function http (request) {
 }
 
 function triggerBuild() {
-  const request = https.request({
-    hostname: 'api.netlify.com',
-    port: 443,
-    path: '/build_hooks/5ee263de79c262cd695003ea',
-    method: 'POST'
-  }, response => {
-    console.log('build triggered');
-  });
-  request.end();
+  const request = axios.post('https://api.netlify.com/build_hooks/5ee263de79c262cd695003ea');
 }
