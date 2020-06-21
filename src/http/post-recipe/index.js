@@ -25,7 +25,7 @@ exports.handler = async function http (request) {
   const url = bodyBuffer.toString('utf-8');
 
   try {
-    const html = (await axios.get(url)).data;
+    const html = (await axios.get(`https://render-tron.appspot.com/render/${encodeURIComponent(url)}`).data;
     const $ = cheerio.load(html)
 
     const extractContent = (nodes) => {
