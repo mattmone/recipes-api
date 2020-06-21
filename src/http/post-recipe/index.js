@@ -1,22 +1,22 @@
 const data = require('@begin/data');
-const https = require('https');
+const axios = require("axios");
 const cheerio = require('cheerio');
 
-function getHtml(url) {
-  return new Promise((resolve, reject) => {
-    https.get(`https://render-tron.appspot.com/render/${encodeURIComponent(url)}`, (response) => {
-      let html = '';
-      response.on('data', (chunk) => {
-        html += chunk
-      });
-      response.on('end', () => {
-        resolve(html);
-      })
-    }).on('error', (error) => {
-      reject(error);
-    })
-  })
-}
+// function getHtml(url) {
+//   return new Promise((resolve, reject) => {
+//     https.get(`https://render-tron.appspot.com/render/${encodeURIComponent(url)}`, (response) => {
+//       let html = '';
+//       response.on('data', (chunk) => {
+//         html += chunk
+//       });
+//       response.on('end', () => {
+//         resolve(html);
+//       })
+//     }).on('error', (error) => {
+//       reject(error);
+//     })
+//   })
+// }
 
 // learn more about HTTP functions here: https://arc.codes/primitives/http
 exports.handler = async function http (request) {
@@ -24,7 +24,7 @@ exports.handler = async function http (request) {
   const url = bodyBuffer.toString('utf-8');
 
   try {
-    const html = await getHtml(url);
+    const html = (await axios.get(url)).data;
     const $ = cheerio.load(html)
 
     const extractContent = (nodes) => {
