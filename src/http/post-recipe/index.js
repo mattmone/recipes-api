@@ -27,6 +27,7 @@ exports.handler = async function http (request) {
       if(url.match(/pamperedchef.com/)) return buildRecipeCard("#recipeName", "#rpIngredients li", '#rpDirections li')
       if($('.wprm-recipe-container').is('.wprm-recipe-container')) return buildRecipeCard('.wprm-recipe-name', '.wprm-recipe-ingredient', '.wprm-recipe-instruction')
       if($('.recipe[itemscope]').is('.recipe[itemscope]')) return buildRecipeCard('h2[itemprop="name"]', 'li[itemprop="ingredients"]', '.instructions[itemprop="recipeInstructions"] li')
+      if($('.recipe-container').is('.recipe-container')) return buildRecipeCard('h1.content-hed.recipe-hed"', '.ingredient-item', '.direction-lists li')
       return {"message": "Could not extract recipe."};
     }
     const recipe = pullRecipeCard();
