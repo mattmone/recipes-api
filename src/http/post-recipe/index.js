@@ -33,7 +33,7 @@ exports.handler = async function http (request) {
     const recipe = pullRecipeCard();
     if(!recipe.message && recipe.title) {
       await data.set({table: "recipes", recipe: JSON.stringify(recipe)})
-      triggerBuild();
+      recipe.triggerBuild = (await triggerBuild()).data;
     }
     return {
       headers: {
@@ -54,5 +54,5 @@ exports.handler = async function http (request) {
 }
 
 function triggerBuild() {
-  const request = axios.post('https://api.netlify.com/build_hooks/5ee263de79c262cd695003ea');
+  return axios.post('https://api.netlify.com/build_hooks/5ee263de79c262cd695003ea');
 }
