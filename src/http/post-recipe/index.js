@@ -33,7 +33,7 @@ exports.handler = async function http (request) {
     const recipe = pullRecipeCard();
     if(!recipe.message && recipe.title) {
       // await data.set({table: "recipes", recipe: JSON.stringify(recipe)})
-      recipe.triggerBuild = await triggerBuild();
+      recipe.triggerBuild = (await triggerBuild()).body;
     }
     return {
       headers: {
